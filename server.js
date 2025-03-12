@@ -1,7 +1,7 @@
 import express from 'express';
 import next from 'next';
 import http from 'http';
-import socketIo from 'socket.io';
+import { Server } from 'socket.io'; // Correct ES Module import
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -10,7 +10,7 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
   const httpServer = http.createServer(server);
-  const io = socketIo(httpServer);
+  const io = new Server(httpServer); // Correct way to initialize socket.io
 
   io.on('connection', (socket) => {
     console.log('New client connected');
@@ -23,7 +23,7 @@ app.prepare().then(() => {
     return handle(req, res);
   });
 
-  httpServer.listen(3000, () => {
-    console.log('> Ready on http://localhost:3000');
+  httpServer.listen(3010, () => {
+    console.log('> Ready on http://localhost:3010');
   });
 });
